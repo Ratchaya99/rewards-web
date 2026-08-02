@@ -4,9 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  Checkbox,
-  Divider,
-  FormControlLabel,
   Stack,
   TextField,
   Typography,
@@ -15,25 +12,40 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 
-import { loginSchema, type LoginFormValues } from "../schemas/login.schema";
+import {
+  registerSchema,
+  type RegisterFormValues,
+} from "../schemas/register.schema";
 
-interface LoginFormProps {
+interface RegisterFormProps {
   isSubmitting: boolean;
-  onSubmit: SubmitHandler<LoginFormValues>;
+  onSubmit: SubmitHandler<RegisterFormValues>;
 }
 
-export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
+export default function RegisterForm({
+  isSubmitting,
+  onSubmit,
+}: RegisterFormProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
+
+  const handleFormSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    await onSubmit(data);
+    reset();
+  };
 
   return (
     <Card
@@ -43,7 +55,11 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
       }}
     >
       <CardContent sx={{ p: 4 }}>
-        <Stack component="form" spacing={4} onSubmit={handleSubmit(onSubmit)}>
+        <Stack
+          component="form"
+          spacing={4}
+          onSubmit={handleSubmit(handleFormSubmit)}
+        >
           <Box
             component="fieldset"
             disabled={isSubmitting}
@@ -89,16 +105,34 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
                       color: "primary.main",
                     }}
                   >
-                    Welcome Back!
+                    Create Account
                   </Typography>
 
                   <Typography color="text.secondary">
-                    Sign in to Rewards Platform
+                    Create your Rewards Platform account
                   </Typography>
                 </Stack>
               </Stack>
 
               <Stack spacing={2}>
+                <TextField
+                  label="First Name"
+                  placeholder="Enter your first name"
+                  autoComplete="given-name"
+                  {...register("firstName")}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
+                />
+
+                <TextField
+                  label="Last Name"
+                  placeholder="Enter your last name"
+                  autoComplete="family-name"
+                  {...register("lastName")}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
+                />
+
                 <TextField
                   label="Email"
                   placeholder="Enter your email"
@@ -111,15 +145,21 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
                 <TextField
                   type="password"
                   label="Password"
-                  placeholder="Enter your password"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   {...register("password")}
                   error={!!errors.password}
                   helperText={errors.password?.message}
                 />
-              </Stack>
 
-              <FormControlLabel control={<Checkbox />} label="Remember me" />
+                <TextField
+                  type="password"
+                  label="Confirm Password"
+                  autoComplete="new-password"
+                  {...register("confirmPassword")}
+                  error={!!errors.confirmPassword}
+                  helperText={errors.confirmPassword?.message}
+                />
+              </Stack>
 
               <Button
                 type="submit"
@@ -134,27 +174,34 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
                   fontWeight: 600,
                 }}
               >
-                {isSubmitting ? "Signing In..." : "Sign In"}
+                {isSubmitting ? "Creating Account..." : "Create Account"}
               </Button>
 
-              <Divider>OR</Divider>
-
-              <Button
-                component={RouterLink}
-                to="/register"
-                fullWidth
-                variant="outlined"
-                size="large"
-                disabled={isSubmitting}
+              <Typography
+                variant="body2"
                 sx={{
-                  py: 1.4,
-                  borderRadius: 2,
-                  textTransform: "none",
-                  fontWeight: 600,
+                  color: "text.secondary",
+                  textAlign: "center",
                 }}
               >
-                Create Account
-              </Button>
+                Already have an account?{" "}
+                <Typography
+                  component={RouterLink}
+                  to="/login"
+                  sx={{
+                    color: "primary.main",
+                    textDecoration: "none",
+                    fontWeight: 600,
+                    pointerEvents: isSubmitting ? "none" : "auto",
+                    opacity: isSubmitting ? 0.5 : 1,
+                    "&:hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  Sign In
+                </Typography>
+              </Typography>
             </Stack>
           </Box>
         </Stack>
