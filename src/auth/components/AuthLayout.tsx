@@ -1,10 +1,13 @@
 import { Box, Paper } from "@mui/material";
+import type { ReactNode } from "react";
 
-import LoginForm from "../components/LoginForm";
-import background from "../../assets/images/background.png";
-import AuthHero from "../components/AuthHero";
+import AuthHero from "./AuthHero";
 
-export default function LoginPage() {
+interface AuthLayoutProps {
+  children: ReactNode;
+}
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <Box
       sx={{
@@ -13,8 +16,7 @@ export default function LoginPage() {
         justifyContent: "center",
         alignItems: "center",
         px: 3,
-
-        backgroundImage: `url(${background})`,
+        backgroundImage: "url('/background.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -33,7 +35,7 @@ export default function LoginPage() {
             xs: "1fr",
             md: "1fr 1fr",
           },
-          boxShadow: (theme) => theme.shadows[6],
+          boxShadow: (theme) => theme.shadows[12],
         }}
       >
         <AuthHero />
@@ -44,10 +46,10 @@ export default function LoginPage() {
             justifyContent: "center",
             alignItems: "center",
             p: 6,
-            bgcolor: "white",
+            bgcolor: "background.paper",
           }}
         >
-          <LoginForm />
+          {children}
         </Box>
       </Paper>
     </Box>

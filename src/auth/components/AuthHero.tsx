@@ -1,7 +1,17 @@
 import { Box, Stack, Typography } from "@mui/material";
 import giftBoxImage from "../../assets/images/gift_box.png";
 
-export default function LoginHero() {
+interface AuthHeroProps {
+  title?: string;
+  description?: string;
+}
+
+export default function AuthHero(props: AuthHeroProps) {
+  const {
+    title = "Rewards Platform",
+    description = "Sign in to continue managing your loyalty program and rewards.",
+  } = props;
+
   return (
     <Box
       sx={{
@@ -30,11 +40,11 @@ export default function LoginHero() {
             fontSize: 48,
           }}
         >
-          Rewards Platform
+          {title}
         </Typography>
 
         <Typography variant="h6" color="text.secondary">
-          Sign in to continue managing your loyalty program and rewards.
+          {description}
         </Typography>
 
         <Box

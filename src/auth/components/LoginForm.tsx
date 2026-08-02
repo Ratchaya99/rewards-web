@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, type LoginFormValues } from "../schemas/login.schema";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function LoginForm() {
   const {
@@ -127,6 +128,8 @@ export default function LoginForm() {
           <Divider>OR</Divider>
 
           <Button
+            component={RouterLink}
+            to="/register"
             fullWidth
             variant="outlined"
             size="large"
