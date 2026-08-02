@@ -1,55 +1,34 @@
-import { Box, Paper } from "@mui/material";
+import { useState } from "react";
 
+import AuthLayout from "../components/AuthLayout";
 import LoginForm from "../components/LoginForm";
-import background from "../../assets/images/background.png";
-import AuthHero from "../components/AuthHero";
+
+import type { LoginFormValues } from "../schemas/login.schema";
 
 export default function LoginPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleLogin = async (data: LoginFormValues) => {
+    console.log(data);
+
+    try {
+      setIsSubmitting(true);
+
+      // TODO: Call login API
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // TODO: Navigate to dashboard
+    } catch (error) {
+      console.error("Error signing in:", error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        px: 3,
-
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <Paper
-        elevation={0}
-        sx={{
-          width: "100%",
-          maxWidth: 1200,
-          minHeight: 720,
-          borderRadius: 4,
-          overflow: "hidden",
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "1fr 1fr",
-          },
-          boxShadow: (theme) => theme.shadows[6],
-        }}
-      >
-        <AuthHero />
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            p: 6,
-            bgcolor: "white",
-          }}
-        >
-          <LoginForm />
-        </Box>
-      </Paper>
-    </Box>
+    <AuthLayout>
+      <LoginForm isSubmitting={isSubmitting} onSubmit={handleLogin} />
+    </AuthLayout>
   );
 }
