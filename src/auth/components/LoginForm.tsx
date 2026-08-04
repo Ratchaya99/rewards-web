@@ -4,9 +4,7 @@ import {
   Button,
   Card,
   CardContent,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Stack,
   TextField,
   Typography,
@@ -26,6 +24,7 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -35,6 +34,14 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
     },
   });
 
+  const handleFormSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+    try {
+      await onSubmit(data);
+    } catch {
+      resetField("password");
+    }
+  };
+
   return (
     <Card
       elevation={0}
@@ -43,7 +50,11 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
       }}
     >
       <CardContent sx={{ p: 4 }}>
-        <Stack component="form" spacing={4} onSubmit={handleSubmit(onSubmit)}>
+        <Stack
+          component="form"
+          spacing={4}
+          onSubmit={handleSubmit(handleFormSubmit)}
+        >
           <Box
             component="fieldset"
             disabled={isSubmitting}
@@ -119,7 +130,7 @@ export default function LoginForm({ isSubmitting, onSubmit }: LoginFormProps) {
                 />
               </Stack>
 
-              <FormControlLabel control={<Checkbox />} label="Remember me" />
+              {/* <FormControlLabel control={<Checkbox />} label="Remember me" /> */}
 
               <Button
                 type="submit"

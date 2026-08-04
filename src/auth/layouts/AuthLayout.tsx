@@ -1,13 +1,20 @@
 import { Box, Paper } from "@mui/material";
 import type { ReactNode } from "react";
 
-import AuthHero from "./AuthHero";
+import AuthHero from "../components/AuthHero";
+import backgroundImage from "../../assets/images/background.png";
 
 interface AuthLayoutProps {
   children: ReactNode;
+  heroTitle?: string;
+  heroDescription?: string;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+export default function AuthLayout({
+  children,
+  heroTitle,
+  heroDescription,
+}: AuthLayoutProps) {
   return (
     <Box
       sx={{
@@ -16,7 +23,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         justifyContent: "center",
         alignItems: "center",
         px: 3,
-        backgroundImage: "url('/background.png')",
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -27,7 +34,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         sx={{
           width: "100%",
           maxWidth: 1200,
-          minHeight: 720,
+          minHeight: 600,
+          maxHeight: "calc(100vh - 48px)",
           borderRadius: 4,
           overflow: "hidden",
           display: "grid",
@@ -38,14 +46,14 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           boxShadow: (theme) => theme.shadows[12],
         }}
       >
-        <AuthHero />
+        <AuthHero title={heroTitle} description={heroDescription} />
 
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            p: 6,
+            p: 4,
             bgcolor: "background.paper",
           }}
         >
