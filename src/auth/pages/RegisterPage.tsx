@@ -9,29 +9,39 @@ import {
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { useNavigate } from "react-router-dom";
 
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import RegisterForm from "../components/RegisterForm";
 
 import type { RegisterFormValues } from "../schemas/register.schema";
+import { useSnackbar } from "notistack";
+import { getApiErrorMessage } from "../../utils/get-api-error-message";
+import { authApi } from "../../api/auth";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
 
   const handleRegister = async (data: RegisterFormValues) => {
-    console.log(data);
-
     try {
       setIsSubmitting(true);
 
-      // TODO: Call register API here
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authApi.register({
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      });
 
       setOpenSuccessDialog(true);
     } catch (error) {
-      console.error("Error creating account:", error);
+      enqueueSnackbar(getApiErrorMessage(error), {
+        variant: "error",
+      });
+
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
@@ -44,7 +54,10 @@ export default function RegisterPage() {
 
   return (
     <>
-      <AuthLayout>
+      <AuthLayout
+        heroTitle="Create an Account"
+        heroDescription="Join our community and start earning rewards today!"
+      >
         <RegisterForm isSubmitting={isSubmitting} onSubmit={handleRegister} />
       </AuthLayout>
 
